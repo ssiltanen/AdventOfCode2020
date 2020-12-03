@@ -15,8 +15,7 @@ let traverse (Right right) (Down down) =
         if i % d = 0 then Some row else None
 
     input
-    |> Array.indexed
-    |> Array.choose (skipRowsByDown down)
+    |> (Array.indexed >> Array.choose (skipRowsByDown down))
     |> Array.mapi (traverseRight right)
     |> Array.tail
     |> Array.where ((=) '#')

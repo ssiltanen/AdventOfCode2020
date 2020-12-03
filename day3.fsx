@@ -19,8 +19,8 @@ let traverse (Right right) (Down down) =
 
 let answer1 = traverse (Right 3) (Down 1)
 let answer2 =
-    [ traverse (Right 1) (Down 1)
-      answer1
+    [ answer1
+      traverse (Right 1) (Down 1)
       traverse (Right 5) (Down 1)
       traverse (Right 7) (Down 1)
       traverse (Right 1) (Down 2) ]

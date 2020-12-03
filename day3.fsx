@@ -1,6 +1,4 @@
-let input = 
-    System.IO.File.ReadAllLines "inputs/day3.txt"
-    |> Array.map Seq.toArray
+let input = System.IO.File.ReadAllLines "inputs/day3.txt"
 
 type Right = Right of int
 type Down = Down of int
@@ -9,12 +7,8 @@ type Down = Down of int
 
 let traverse (Right right) (Down down) =
     let rowLength = input.[0].Length
-
-    let traverseRight r i (row: char[]) =
-        row.[(r * i) % rowLength]
-
-    let skipRowsByDown d (i,row) =
-        if i % d = 0 then Some row else None
+    let traverseRight r i (row: string) = row.[(r * i) % rowLength]
+    let skipRowsByDown d (i,row) = if i % d = 0 then Some row else None
 
     input
     |> (Array.indexed >> Array.choose (skipRowsByDown down))

@@ -1,59 +1,65 @@
+open System
 open System.Text.RegularExpressions
 
 let input = System.IO.File.ReadAllText "inputs/day4.txt"
 
 #time "on"
 
-let passports =
-    let nl = System.Environment.NewLine
-    input.Split (nl + nl)
-    |> Array.map (
-        fun passport -> passport.Replace(nl, " ").Split ' ' 
-        >> Array.map (fun field -> 
-            let split = field.Split ':'
-            split.[0], split.[1]))
-
-let tryFindField (fields: (string * string) []) (name: string) = fields |> Array.tryFind (fst >> (=) name)
 let regexSuccess pattern (value: string) = if Regex.Match(value, pattern).Success then Some value else None
 let between min max i = if i >= min && i <= max then Some i else None
 
-let validateBirthYear = regexSuccess @"^\d{4}$" >> Option.bind (int >> between 1920 2002)
-let validateIssueYear = regexSuccess @"^\d{4}$" >> Option.bind (int >> between 2010 2020)
-let validateExpirationYear = regexSuccess @"^\d{4}$" >> Option.bind (int >> between 2020 2030)
-let validateHairColor = regexSuccess @"^#[0-9a-f]{6}$"
-let validateEyeColor = regexSuccess @"^(amb|blu|brn|gry|grn|hzl|oth)$"
-let validatePassportId = regexSuccess @"^\d{9}$"
-let validateHeight = 
-    regexSuccess @"^(\d{3}cm|\d{2}in)$" >> Option.bind (fun value -> 
-        if value.EndsWith "cm" then value.[ .. 2] |> int |> between 150 193
-        elif value.EndsWith "in" then value.[ .. 1] |> int |> between 59 76
-        else None)
+type Passport =
+    { Byr: string option
+      Iyr: string option
+      Eyr: string option
+      Hgt: string option
+      Hcl: string option
+      Ecl: string option
+      Pid: string option } with
 
-let (|*>) f = Option.bind (fun _ -> f)
-let (|!>) a f = a |> Option.bind (snd >> f)
+    member this.HasMandatoryValues =
+        [ this.Byr; this.Iyr; this.Eyr; this.Hgt; this.Hcl; this.Ecl; this.Pid ]
+        |> List.forall Option.isSome
 
-let task1 fields =
-    let tryFind = tryFindField fields
-    tryFind "byr"
-    |*> (tryFind "iyr")
-    |*> (tryFind "eyr")
-    |*> (tryFind "hgt")
-    |*> (tryFind "hcl")
-    |*> (tryFind "ecl")
-    |*> (tryFind "pid")
+    member this.HasValidByr = 
+        this.Byr |> Option.bind (regexSuccess @"^\d{4}$" >> Option.bind (int >> between 1920 2002)) |> Option.isSome
+    member this.HasValidIyr =  
+        this.Iyr |> Option.bind (regexSuccess @"^\d{4}$" >> Option.bind (int >> between 2010 2020)) |> Option.isSome
+    member this.HasValidEyr = 
+        this.Eyr |> Option.bind (regexSuccess @"^\d{4}$" >> Option.bind (int >> between 2020 2030)) |> Option.isSome 
+    member this.HasValidHcl = 
+        this.Hcl |> Option.bind (regexSuccess @"^#[0-9a-f]{6}$") |> Option.isSome
+    member this.HasValidEcl = 
+        this.Ecl |> Option.bind (regexSuccess @"^(amb|blu|brn|gry|grn|hzl|oth)$") |> Option.isSome
+    member this.HasValidPid = 
+        this.Pid |> Option.bind (regexSuccess @"^\d{9}$") |> Option.isSome
+    member this.HasValidHgt =
+        this.Hgt 
+        |> Option.bind (regexSuccess @"^(\d{3}cm|\d{2}in)$" >> Option.bind (fun value -> 
+            if value.EndsWith "cm" then value.[ .. 2] |> int |> between 150 193
+            elif value.EndsWith "in" then value.[ .. 1] |> int |> between 59 76
+            else None))
+        |> Option.isSome
+        
+    member this.HasValidValues =
+        [ this.HasValidByr; this.HasValidIyr; this.HasValidEyr; this.HasValidHcl; this.HasValidEcl; this.HasValidPid; this.HasValidHgt ]
+        |> List.forall id
 
-let task2 fields =
-    let tryFind = tryFindField fields
-    (tryFind "byr" |!> validateBirthYear)
-    |*> (tryFind "iyr" |!> validateIssueYear)
-    |*> (tryFind "eyr" |!> validateExpirationYear )
-    |*> (tryFind "hgt" |!> validateHeight)
-    |*> (tryFind "hcl" |!> validateHairColor)
-    |*> (tryFind "ecl" |!> validateEyeColor)
-    |*> (tryFind "pid" |!> validatePassportId)
+let passports =
+    let nl = Environment.NewLine
+    input.Split (nl + nl)
+    |> Array.map (fun passport ->
+        let fields = passport.Split([| nl; " "; ":" |], StringSplitOptions.RemoveEmptyEntries) |> Array.pairwise
+        let tryGetField name = fields |> Array.tryFind (fst >> (=) name) |> Option.map snd
+        { Byr = tryGetField "byr"
+          Iyr = tryGetField "iyr"
+          Eyr = tryGetField "eyr"
+          Hgt = tryGetField "hgt"
+          Hcl = tryGetField "hcl"
+          Ecl = tryGetField "ecl"
+          Pid = tryGetField "pid" })
 
-let validPassports validate = passports |> Array.choose validate |> Array.length
-let answer1 = validPassports task1
-let answer2 = validPassports task2
+let answer1 = passports |> Array.where (fun pass -> pass.HasMandatoryValues) |> Array.length
+let answer2 = passports |> Array.where (fun pass -> pass.HasValidValues) |> Array.length
 
 #time "off"

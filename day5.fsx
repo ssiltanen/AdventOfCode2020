@@ -1,7 +1,9 @@
 let input = System.IO.File.ReadAllLines "inputs/day5.txt"
 
-let binarySpacePartitioning low up lowerBound upperBound (partitioning: string) =
-    (partitioning |> Seq.toList, lowerBound, upperBound)
+#time "on"
+
+let binarySpacePartitioning low up lowerBound upperBound partitioning =
+    (Seq.toList partitioning, lowerBound, upperBound)
     |> Array.unfold (fun (partitioning, lower, upper) ->
         let mid = (lower + upper) / 2
         match partitioning with
@@ -23,4 +25,6 @@ let answer1 = Array.last seatIds
 let answer2 =
     seatIds
     |> Array.pairwise
-    |> Array.pick (fun (a,b) -> if b - a = 2 then Some ((b + a) / 2) else None)
+    |> Array.pick (fun (a,b) -> if b - a = 2 then Some (a + 1) else None)
+
+#time "off"

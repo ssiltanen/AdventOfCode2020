@@ -2,20 +2,26 @@ let input = System.IO.File.ReadAllLines "inputs/day5.txt"
 
 #time "on"
 
-let binarySpacePartitioning lowChar highChar sequence =
+type SpacePartition = Hi | Lo with 
+    static member ofChar = function 
+        | 'F' | 'L' -> Lo 
+        | 'B' | 'R' -> Hi
+        | _ -> failwith "Invalid partition char"
+
+let binarySpacePartitioning sequence =
     let middle a b = (a + b) / 2
-    let binaryFolder (lo,hi) c =
+    let binaryFolder (lo,hi) p =
         let mid = middle lo hi
-        if c = lowChar then (lo, mid)
-        elif c = highChar then (mid + 1, hi)
-        else failwith "Invalid sequence value"
+        match p with
+        | Lo -> lo, mid
+        | Hi -> mid + 1, hi
 
     sequence |> Array.fold binaryFolder (0, (pown 2 sequence.Length) - 1) |> fst
 
 let findSeat partitioning =
-    let rowData, colData = partitioning |> Seq.toArray |> Array.splitAt 7
-    let row = binarySpacePartitioning 'F' 'B' rowData
-    let col = binarySpacePartitioning 'L' 'R' colData
+    let rowData, colData = partitioning |> Seq.toArray |> Array.map SpacePartition.ofChar |> Array.splitAt 7
+    let row = binarySpacePartitioning rowData
+    let col = binarySpacePartitioning colData
     row, col
 
 let seatId (row,col) = row * 8 + col

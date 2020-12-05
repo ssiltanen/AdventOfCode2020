@@ -4,13 +4,13 @@ let input = System.IO.File.ReadAllLines "inputs/day5.txt"
 
 let binarySpacePartitioning lowChar highChar sequence =
     let middle a b = (a + b) / 2
-    sequence
-    |> Array.fold (fun (lo,hi) c ->
+    let binaryFolder (lo,hi) c =
         let mid = middle lo hi
         if c = lowChar then (lo, mid)
         elif c = highChar then (mid + 1, hi)
-        else failwith "Invalid sequence value") (0, (pown 2 sequence.Length) - 1)
-    |> fst
+        else failwith "Invalid sequence value"
+
+    sequence |> Array.fold binaryFolder (0, (pown 2 sequence.Length) - 1) |> fst
 
 let findSeat partitioning =
     let rowData, colData = partitioning |> Seq.toArray |> Array.splitAt 7

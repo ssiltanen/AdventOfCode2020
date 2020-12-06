@@ -5,10 +5,7 @@ let input = System.IO.File.ReadAllText "inputs/day6.txt"
 let groupAnswers = input.Split(System.Environment.NewLine + System.Environment.NewLine)
 
 groupAnswers
-|> Array.sumBy (
-    fun group -> group.Replace(System.Environment.NewLine, "")
-    >> Seq.distinct
-    >> Seq.length)
+|> Array.sumBy (Seq.where System.Char.IsLetter >> Seq.distinct >> Seq.length)
 |> printfn "Answer 1: %i"
 
 groupAnswers

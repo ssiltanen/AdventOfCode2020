@@ -15,6 +15,6 @@ allPairs
 
 input 
 |> Seq.pick (fun i -> allPairs |> Seq.tryPick (fun (a,b) -> if a + b + i = 2020 then Some (a * b * i) else None))
-|> printfn "Answer 1: %i"
+|> printfn "Answer 2: %i"
 
 #time "off"

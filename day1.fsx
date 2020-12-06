@@ -9,11 +9,12 @@ let allPairs =
     |> Array.groupBy id
     |> Array.choose (fun ((a,b),values) -> if a = b && Array.length values = 1 then None else Some (a,b))
 
-let answer1 =
-    allPairs |> Seq.pick (fun (a,b) -> if a + b = 2020 then Some (a * b) else None)
+allPairs 
+|> Seq.pick (fun (a,b) -> if a + b = 2020 then Some (a * b) else None) 
+|> printfn "Answer 1: %i"
 
-let answer2 =
-    input |> Seq.pick (fun i ->
-        allPairs |> Seq.tryPick (fun (a,b) -> if a + b + i = 2020 then Some (a * b * i) else None))
+input 
+|> Seq.pick (fun i -> allPairs |> Seq.tryPick (fun (a,b) -> if a + b + i = 2020 then Some (a * b * i) else None))
+|> printfn "Answer 1: %i"
 
 #time "off"

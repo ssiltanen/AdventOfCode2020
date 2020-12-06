@@ -59,7 +59,7 @@ let passports =
           Ecl = tryGetField "ecl"
           Pid = tryGetField "pid" })
 
-let answer1 = passports |> Array.where (fun pass -> pass.HasMandatoryValues) |> Array.length
-let answer2 = passports |> Array.where (fun pass -> pass.HasValidValues) |> Array.length
+passports |> Array.where (fun pass -> pass.HasMandatoryValues) |> Array.length |> printfn "Answer 1: %i"
+passports |> Array.where (fun pass -> pass.HasValidValues) |> Array.length |> printfn "Answer 2: %i"
 
 #time "off"

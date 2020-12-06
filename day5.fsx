@@ -28,7 +28,8 @@ let seatId (row,col) = row * 8 + col
 
 let seatIds = input |> Array.map (findSeat >> seatId) |> Array.sort
 
-let answer1 = Array.last seatIds
-let answer2 = seatIds |> Array.pairwise |> Array.pick (fun (a,b) -> if b - a = 2 then Some (a + 1) else None)
+Array.last seatIds |> printfn "Answer 1: %i"
+
+seatIds |> Array.pairwise |> Array.pick (fun (a,b) -> if b - a = 2 then Some (a + 1) else None) |> printfn "Answer 2: %i"
 
 #time "off"

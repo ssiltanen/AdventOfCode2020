@@ -18,13 +18,15 @@ let traverse (Right right) (Down down) =
     |> Array.length
 
 let answer1 = traverse (Right 3) (Down 1)
-let answer2 =
-    [ answer1
-      traverse (Right 1) (Down 1)
-      traverse (Right 5) (Down 1)
-      traverse (Right 7) (Down 1)
-      traverse (Right 1) (Down 2) ]
-    |> List.map int64
-    |> List.reduce (*)
+printfn "Answer 1: %i" answer1
+
+[ answer1
+  traverse (Right 1) (Down 1)
+  traverse (Right 5) (Down 1)
+  traverse (Right 7) (Down 1)
+  traverse (Right 1) (Down 2) ]
+|> List.map int64
+|> List.reduce (*)
+|> printfn "Answer 2: %i"
 
 #time "off"

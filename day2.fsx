@@ -30,7 +30,7 @@ module Array =
     let countWith f = 
         Array.where f >> Array.length
 
-let answer1 = passwordRules |> Array.countWith task1 
-let answer2 = passwordRules |> Array.countWith task2
+passwordRules |> Array.countWith task1 |> printfn "Answer 1: %i"
+passwordRules |> Array.countWith task2 |> printfn "Answer 2: %i"
 
 #time "off"

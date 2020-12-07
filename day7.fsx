@@ -38,7 +38,7 @@ getParents "shiny gold" []
 |> List.length 
 |> printfn "Answer1: %i"
 
-(getChildCount "shiny gold" 1) - 1
+(getChildCount "shiny gold" 1) - 1 // Do not count starting item itself into the sum
 |> printfn "Answer2: %i"
 
 #time "off"

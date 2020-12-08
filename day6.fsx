@@ -1,6 +1,6 @@
 let input = System.IO.File.ReadAllText "inputs/day6.txt"
 
-#time "on"
+#time
 
 let groupAnswers = input.Split(System.Environment.NewLine + System.Environment.NewLine)
 
@@ -15,5 +15,3 @@ groupAnswers
     >> Set.intersectMany
     >> Set.count)
 |> printfn "Answer 2: %i"
-
-#time "off"

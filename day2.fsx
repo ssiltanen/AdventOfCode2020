@@ -7,7 +7,7 @@ type PasswordRule =
       Letter: char
       Password: string }
 
-#time "on"
+#time
 
 let passwordRules = 
     input |> Array.map (fun row ->
@@ -32,5 +32,3 @@ module Array =
 
 passwordRules |> Array.countWith task1 |> printfn "Answer 1: %i"
 passwordRules |> Array.countWith task2 |> printfn "Answer 2: %i"
-
-#time "off"

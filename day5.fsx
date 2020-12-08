@@ -1,6 +1,6 @@
 let input = System.IO.File.ReadAllLines "inputs/day5.txt"
 
-#time "on"
+#time
 
 type SpacePartition = Hi | Lo with 
     static member ofChar = function 
@@ -31,5 +31,3 @@ let seatIds = input |> Array.map (findSeat >> seatId) |> Array.sort
 Array.last seatIds |> printfn "Answer 1: %i"
 
 seatIds |> Array.pairwise |> Array.pick (fun (a,b) -> if b - a = 2 then Some (a + 1) else None) |> printfn "Answer 2: %i"
-
-#time "off"

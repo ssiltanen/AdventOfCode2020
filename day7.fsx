@@ -2,7 +2,7 @@ open System.Text.RegularExpressions
 
 let input = System.IO.File.ReadAllLines "inputs/day7.txt"
 
-#time "on"
+#time
 
 let bags =
     input |> Array.map (fun bag ->
@@ -40,5 +40,3 @@ getParents "shiny gold" []
 
 (getChildCount "shiny gold" 1) - 1 // Do not count starting item itself into the sum
 |> printfn "Answer2: %i"
-
-#time "off"

@@ -2,7 +2,7 @@ let input =
     System.IO.File.ReadAllLines "inputs/day1.txt"
     |> Array.map int
 
-#time "on"
+#time
 
 let allPairs = 
     Array.allPairs input input
@@ -16,5 +16,3 @@ allPairs
 input 
 |> Seq.pick (fun i -> allPairs |> Seq.tryPick (fun (a,b) -> if a + b + i = 2020 then Some (a * b * i) else None))
 |> printfn "Answer 2: %i"
-
-#time "off"

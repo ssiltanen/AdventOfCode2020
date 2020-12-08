@@ -3,7 +3,7 @@ let input = System.IO.File.ReadAllLines "inputs/day3.txt"
 type Right = Right of int
 type Down = Down of int
 
-#time "on"
+#time
 
 let traverse (Right right) (Down down) =
     let rowLength = input.[0].Length
@@ -28,5 +28,3 @@ printfn "Answer 1: %i" answer1
 |> List.map int64
 |> List.reduce (*)
 |> printfn "Answer 2: %i"
-
-#time "off"

@@ -3,7 +3,7 @@ open System.Text.RegularExpressions
 
 let input = System.IO.File.ReadAllText "inputs/day4.txt"
 
-#time "on"
+#time
 
 let regexSuccess pattern (value: string) = if Regex.Match(value, pattern).Success then Some value else None
 let between min max i = if i >= min && i <= max then Some i else None
@@ -61,5 +61,3 @@ let passports =
 
 passports |> Array.where (fun pass -> pass.HasMandatoryValues) |> Array.length |> printfn "Answer 1: %i"
 passports |> Array.where (fun pass -> pass.HasValidValues) |> Array.length |> printfn "Answer 2: %i"
-
-#time "off"

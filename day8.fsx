@@ -9,21 +9,26 @@ type Instruction = Acc of int | Jmp of int | Nop of int with
         | "nop", value -> Nop value
         | _ -> failwith "Unsupported instruction"
 
+type Sequence = Infinite of acc:int | Finite of acc:int
+
 let instructions =
     input |> Array.map (fun instruction -> 
-        let split = instruction.Split ([| " "; " +" |], System.StringSplitOptions.None)
+        let split = instruction.Split " "
         Instruction.ofTuple (split.[0], int split.[1]))
 
-let accAfterRunningInstructionsOnce () =
+let runInstructions instructions =
     let inst = instructions |> Array.map (fun i -> i, 0)
+    let length = Array.length inst
     let rec runInstructionAt acc i =
-        let instruction, runs = inst.[i]
-        inst.[i] <- (instruction, runs + 1)
-        match inst.[i] with
-        | _, 2 -> acc
-        | Acc value, _ -> runInstructionAt (acc + value) (i + 1)
-        | Jmp value, _ -> runInstructionAt acc (i + value)
-        | Nop _, _ -> runInstructionAt acc (i + 1)
+        if i >= length then Finite acc
+        else
+            let instruction, executions = inst.[i]
+            inst.[i] <- (instruction, executions + 1)
+            match inst.[i] with
+            | _, 2 -> Infinite acc
+            | Acc value, _ -> runInstructionAt (acc + value) (i + 1)
+            | Jmp value, _ -> runInstructionAt acc (i + value)
+            | Nop _, _ -> runInstructionAt acc (i + 1)
     runInstructionAt 0 0
 
 let accOfFixedSequence () =
@@ -35,29 +40,18 @@ let accOfFixedSequence () =
     let inject i value (arr: Instruction []) =
         arr.[i] <- value
         arr
-        
-    let tryGetFiniteSequenceAcc instructions =
-        let inst = instructions |> Array.map (fun i -> i, 0)
-        let length = Array.length inst
-        let rec runInstructionAt acc i =
-            if i >= length then Some acc
-            else
-                let instruction, runs = inst.[i]
-                inst.[i] <- (instruction, runs + 1)
-                match inst.[i] with
-                | _, 2 -> None
-                | Acc value, _ -> runInstructionAt (acc + value) (i + 1)
-                | Jmp value, _ -> runInstructionAt acc (i + value)
-                | Nop _, _ -> runInstructionAt acc (i + 1)
-        runInstructionAt 0 0
 
     instructions
     |> (Seq.mapi (fun i inst -> 
             match inst with
             | Acc _ -> None
-            | Jmp value -> tryGetFiniteSequenceAcc (instructions |> copy |> inject i (Nop value))
-            | Nop value -> tryGetFiniteSequenceAcc (copy instructions |> inject i (Jmp value)))
-        >> Seq.pick id)
+            | Jmp value -> Some (runInstructions (instructions |> copy |> inject i (Nop value)))
+            | Nop value -> Some (runInstructions (instructions |> copy |> inject i (Jmp value))))
+        >> Seq.pick (function Some (Finite acc) -> Some acc | _ -> None))
 
-accAfterRunningInstructionsOnce() |> printfn "Answer1: %i"
+runInstructions instructions 
+|> function 
+| Infinite acc -> printfn "Answer1: %i" acc 
+| _ -> failwith "Error"
+
 accOfFixedSequence() |> printfn "Answer2: %i"

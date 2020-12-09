@@ -2,9 +2,8 @@ let input = System.IO.File.ReadAllLines "inputs/day09.txt" |> Array.map int64
 
 #time
 
-let getPreceding25 i = Array.skip (i - 25) >> Array.take 25
-
 let invalidNum =
+    let getPreceding25 i = Array.skip (i - 25) >> Array.take 25
     seq { 26 .. (Array.length input - 1) }
     |> Seq.pick (fun i -> 
         let cur = int64 input.[i]

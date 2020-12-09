@@ -22,6 +22,5 @@ let window =
     |> Array.indexed
     |> Array.pick (fun (skip,_) -> windowSizes |> Seq.tryPick (tryGetWindowWithSum invalidNum skip))
 
-
 printfn "Answer1: %i" invalidNum
 printfn "Answer2: %i" (Array.min window + Array.max window)

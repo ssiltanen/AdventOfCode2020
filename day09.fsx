@@ -15,11 +15,14 @@ let invalidNum =
 
 printfn "Answer1: %i" invalidNum
 
+let tryGetWindowWithSum sum skip size =
+    input |> Array.skip skip |> Array.windowed size |> Array.tryPick (fun win -> if Array.sum win = sum then Some win else None)
+
+let generateWindowSizes = seq { 2 .. Array.length input }
+
 let window =
     input
     |> Array.indexed
-    |> Array.pick (fun (i,_) ->
-        seq { 2 .. Array.length input } |> Seq.tryPick (fun size -> 
-            input |> Array.skip i |> Array.windowed size |> Array.tryPick (fun win -> if Array.sum win = invalidNum then Some win else None)))
+    |> Array.pick (fun (skip,_) -> generateWindowSizes |> Seq.tryPick (tryGetWindowWithSum invalidNum skip))
 
 printfn "Answer2: %i" (Array.min window + Array.max window)

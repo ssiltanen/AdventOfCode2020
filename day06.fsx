@@ -1,4 +1,4 @@
-let input = System.IO.File.ReadAllText "inputs/day6.txt"
+let input = System.IO.File.ReadAllText "inputs/day06.txt"
 
 #time
 

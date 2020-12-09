@@ -1,4 +1,4 @@
-let input = System.IO.File.ReadAllLines "inputs/day2.txt"
+let input = System.IO.File.ReadAllLines "inputs/day02.txt"
 
 [<Struct>]
 type PasswordRule =

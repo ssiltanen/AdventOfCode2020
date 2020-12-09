@@ -1,6 +1,6 @@
 open System.Text.RegularExpressions
 
-let input = System.IO.File.ReadAllLines "inputs/day7.txt"
+let input = System.IO.File.ReadAllLines "inputs/day07.txt"
 
 #time
 

@@ -1,7 +1,7 @@
 open System
 open System.Text.RegularExpressions
 
-let input = System.IO.File.ReadAllText "inputs/day4.txt"
+let input = System.IO.File.ReadAllText "inputs/day04.txt"
 
 #time
 

@@ -16,12 +16,12 @@ let positions =
     |> Array.collect id
     |> Map
 
-let immediateAdjacent (positions: Map<(int * int), Position>) (x, y) =
+let task1Adjacent (positions: Map<(int * int), Position>) (x, y) =
     List.allPairs [ x - 1 .. x + 1 ] [ y - 1 .. y + 1 ]
     |> List.except [ x,y ]
     |> List.choose positions.TryFind
 
-let firstSeatsInDirections (positions: Map<(int * int), Position>) (x, y) =
+let task2Adjacent (positions: Map<(int * int), Position>) (x, y) =
     let findFirstSeatInDirection (positions: Map<(int * int), Position>) pos getNextInDir =
         let rec loop pos =
             let newPos = getNextInDir pos
@@ -85,9 +85,9 @@ let getOccupiedSeatCountAfterStabilizing getAdjacent adjacentLimit positions =
     |> Seq.length
 
 positions
-|> getOccupiedSeatCountAfterStabilizing immediateAdjacent 4
+|> getOccupiedSeatCountAfterStabilizing task1Adjacent 4
 |> printfn "Answer1: %i"
 
 positions
-|> getOccupiedSeatCountAfterStabilizing firstSeatsInDirections 5
+|> getOccupiedSeatCountAfterStabilizing task2Adjacent 5
 |> printfn "Answer2: %i"
